@@ -1,0 +1,28 @@
+<%- include('header.html') -%>
+<html lang="en">
+<head>
+    <title>Ticket</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+<h1>Ticket</h1>
+<ul>
+    <% if(results) { %>
+        <% for(var r=0; r < results.length; ++r) { %>
+        <li>
+        ID: <%= results[r].tid%><br />
+        Type: <%= decodeURI(results[r].type) %><br />
+        Content: <%= decodeURI(results[r].content)%></li>
+        <hr />
+        <% } %>
+    <% } %>
+</ul>
+<form method="post" action="/add">
+    <textarea name="body">
+
+    </textarea>
+    <input type="submit" value="Add">
+</form>
+</body>
+</html>
+<%- include('footer.html') -%>
