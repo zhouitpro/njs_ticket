@@ -1,11 +1,10 @@
 <%- include('header.html') -%>
-<html lang="en">
-<head>
-    <title>Ticket</title>
-    <meta charset="utf-8" />
-</head>
-<body>
 <h1>Ticket</h1>
+<form method="post" action="/add">
+    <textarea name="body">
+    </textarea>
+    <input type="submit" value="Add">
+</form>
 <ul>
     <% if(results) { %>
         <% for(var r=0; r < results.length; ++r) { %>
@@ -17,12 +16,4 @@
         <% } %>
     <% } %>
 </ul>
-<form method="post" action="/add">
-    <textarea name="body">
-
-    </textarea>
-    <input type="submit" value="Add">
-</form>
-</body>
-</html>
 <%- include('footer.html') -%>

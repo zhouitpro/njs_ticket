@@ -1,5 +1,8 @@
 var http = require('http');
 var url = require('url');
+var fs = require('fs');
+var mime = require('mime-types');
+var static = require('node-static');
 
 exports.ejs = require('ejs');
 exports.db = require(global.__basedir + '/core/includes/database');
@@ -22,10 +25,25 @@ exports.initRouter = function(req) {
     var pathname = url.parse(req.url).pathname,
         routers = self.routerConfig.routers();
 
+    // this is assets.
+    if (pathname.split('/')[1] == 'assets' && pathname.split('/')[2]) {
+        // var file = static.Server('../theme');
+        // return file.serve(self.req, self.res);
+        fs.readFile(self.theme_path + pathname, function (err, data) {
+            if (err) return err;
+            var type = mime.lookup(self.theme_path + pathname);
+            self.res.writeHead(200, {'Content-Type': type});
+            self.res.write(data);
+            self.res.end();
+        });
+        return;
+    }
+
     self.controller = routers[pathname] || false;
 
+    // 404 page.
     if (!self.controller) {
-       self.view();
+       return self.view();
     }
 
     var basename = self.controller.split('.')[0];
@@ -37,6 +55,15 @@ exports.initRouter = function(req) {
     // run controller.
     var c = require(global.__basedir + '/controller/'+basename);
     c[func](self);
+};
+
+/**
+ * get assets path.
+ */
+exports.assets = function($path) {
+    var self = this;
+    var theme_path = '/assets/' + $path;
+    return 'http://' + self.req.headers.host + theme_path;
 };
 
 /**
@@ -53,13 +80,24 @@ exports.view = function(data) {
         self.res.end('404 Page Not Found.');
     }
 
-    self.ejs.renderFile(self.template, {'results': data}, {}, function (err, str) {
+    // init data.
+    data.basedir = global.__basedir;
+    data.baseurl = 'http://' + self.req.headers.host;
+    data.fullpath = data.baseurl + url.parse(self.req.url).pathname;
+    data.helper = require(global.__basedir + '/core/includes/helpers');
+
+    console.dir(data);
+
+    // render templates.
+    self.ejs.renderFile(self.template, {results: data}, {debug: false}, function (err, str) {
         self.res.end(str);
     });
 };
 
 exports.createServer = function() {
     var self = this;
+
+    self.theme_path = global.__basedir + '/theme';
     return http.createServer(function (req, res) {
         self.req = req;
         self.res = res;
