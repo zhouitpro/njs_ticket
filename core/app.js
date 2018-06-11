@@ -25,14 +25,26 @@ exports.initRouter = function(req) {
     var pathname = url.parse(req.url).pathname,
         routers = self.routerConfig.routers();
 
+    var res = self.res;
+
     // this is assets.
     if (pathname.split('/')[1] == 'assets' && pathname.split('/')[2]) {
         fs.readFile(self.theme_path + pathname, function (err, data) {
-            if (err) return err;
+
+            // if err to 404 page.
+            if (err) {
+                res.writeHead(404, 'page not found.');
+                res.end('404 Page Not Found.');
+            }
+
+            // get mime type.
             var type = mime.lookup(self.theme_path + pathname);
-            self.res.writeHead(200, {'Content-Type': type});
-            self.res.write(data);
-            self.res.end();
+
+            res.writeHead(200, {'Content-Type': type});
+            if (data) {
+                res.write(data);
+            }
+            res.end();
         });
         return;
     }
