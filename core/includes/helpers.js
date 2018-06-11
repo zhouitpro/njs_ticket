@@ -1,7 +1,7 @@
-var func = {
-  assets: function(path) {
-      return 'test';
-  }
+exports.helper = function(app) {
+    return {
+        assets: function(path) {
+            return 'http://' + app.req.headers.host + '/assets/' + path;
+        }
+    }
 };
-
-module.exports = func;

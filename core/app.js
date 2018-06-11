@@ -2,7 +2,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var mime = require('mime-types');
-var static = require('node-static');
+var helper = require(global.__basedir + '/core/includes/helpers');
 
 exports.ejs = require('ejs');
 exports.db = require(global.__basedir + '/core/includes/database');
@@ -58,15 +58,6 @@ exports.initRouter = function(req) {
 };
 
 /**
- * get assets path.
- */
-exports.assets = function($path) {
-    var self = this;
-    var theme_path = '/assets/' + $path;
-    return 'http://' + self.req.headers.host + theme_path;
-};
-
-/**
  * View.
  *
  * @param data
@@ -81,19 +72,29 @@ exports.view = function(data) {
     }
 
     // init data.
-    data.basedir = global.__basedir;
-    data.baseurl = 'http://' + self.req.headers.host;
-    data.fullpath = data.baseurl + url.parse(self.req.url).pathname;
-    data.helper = require(global.__basedir + '/core/includes/helpers');
-
-    console.dir(data);
+    var results = {
+        basedir: global.__basedir,
+        baseurl: 'http://' + self.req.headers.host,
+        fullpath: data.baseurl + url.parse(self.req.url).pathname,
+        helper: helper.helper(self),
+        data: data
+    };
 
     // render templates.
-    self.ejs.renderFile(self.template, {results: data}, {debug: false}, function (err, str) {
-        self.res.end(str);
+    self.ejs.renderFile(self.template, results, {debug: false}, function (err, str) {
+        if (err) {
+            self.res.end(err.toString());
+        } else {
+            self.res.end(str);
+        }
     });
 };
 
+/**
+ * Create server and bind event.
+ *
+ * @returns {server.Server}
+ */
 exports.createServer = function() {
     var self = this;
 

@@ -6,12 +6,12 @@
     <input type="submit" value="Add">
 </form>
 <ul>
-    <% if(results) { %>
-        <% for(var r=0; r < results.length; ++r) { %>
+    <% if(data) { %>
+        <% for(var r=0; r < data.length; ++r) { %>
         <li>
-        ID: <%= results[r].tid%><br />
-        Type: <%= decodeURI(results[r].type) %><br />
-        Content: <%= decodeURI(results[r].content)%></li>
+        ID: <%= data[r].tid%><br />
+        Type: <%= decodeURI(data[r].type) %><br />
+        Content: <%= decodeURI(data[r].content)%></li>
         <hr />
         <% } %>
     <% } %>
