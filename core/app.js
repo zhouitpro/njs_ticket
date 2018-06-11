@@ -27,8 +27,6 @@ exports.initRouter = function(req) {
 
     // this is assets.
     if (pathname.split('/')[1] == 'assets' && pathname.split('/')[2]) {
-        // var file = static.Server('../theme');
-        // return file.serve(self.req, self.res);
         fs.readFile(self.theme_path + pathname, function (err, data) {
             if (err) return err;
             var type = mime.lookup(self.theme_path + pathname);
