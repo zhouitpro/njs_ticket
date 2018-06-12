@@ -1,7 +1,9 @@
 exports.helper = function(app) {
-    return {
-        assets: function(path) {
-            return 'http://' + app.req.headers.host + '/assets/' + path;
-        }
-    }
+
+    var helpers = {};
+
+    helpers.assets = function(path) {
+        return 'http://' + app.req.headers.host + '/assets/' + path;
+    };
+    return helpers;
 };

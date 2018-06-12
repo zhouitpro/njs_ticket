@@ -4,7 +4,15 @@
   "description": "",
   "main": "httpser.js",
   "dependencies": {
-    "ejs": "^2.6.1"
+    "ejs": "^2.6.1",
+    "laravel-elixir": "^6.0.0-18",
+    "markdown-it": "^8.4.1",
+    "react": "^16.4.0",
+    "bootstrap-sass": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "gulp": "^3.9.1",
+    "jquery": "^3.1.1",
+    "laravel-elixir-webpack-official": "^1.0.10"
   },
   "devDependencies": {},
   "scripts": {
