@@ -49,7 +49,19 @@ exports.initRouter = function(req) {
         return;
     }
 
-    self.controller = routers[pathname] || false;
+    let match_routers = [
+        pathname,
+        pathname + '/',
+        pathname.replace(/(\/[0-9]+)(\/?)/, '/%$2')
+    ];
+
+    self.controller = false;
+
+    for(let i=0; i<match_routers .length; ++i) {
+        if((typeof routers[match_routers[i]]) !== undefined) {
+            self.controller = routers[match_routers[i]];
+        }
+    }
 
     // 404 page.
     if (!self.controller) {
