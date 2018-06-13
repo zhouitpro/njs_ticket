@@ -1,6 +1,7 @@
 exports.routers = function() {
   return {
       '/': 'index.front',
-      '/add': 'add.addto'
+      '/add': 'add.addto',
+      'detail/%': 'detail.list'
   }
 };

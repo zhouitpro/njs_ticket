@@ -3,62 +3,53 @@
     <h1>Ticket</h1>
 </header>
 <div class="container">
-    <div class="container">
-        <div class="row ticket-headers">
-            <div class="ticket-type row col-3">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-info active">
-                        <input type="radio" name="options" value="task" autocomplete="off" checked>TASK
-                    </label>
-                    <label class="btn btn-info">
-                        <input type="radio" name="options" value="feature" autocomplete="off">计划
-                    </label>
-                    <label class="btn btn-info">
-                        <input type="radio" name="options" value="tmp" autocomplete="off">临时
-                    </label>
-                </div>
+    <div class="row ticket-headers">
+        <div class="ticket-type col-3">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-info active">
+                    <input type="radio" name="options" value="task" autocomplete="off" checked>TASK
+                </label>
+                <label class="btn btn-info">
+                    <input type="radio" name="options" value="feature" autocomplete="off">计划
+                </label>
+                <label class="btn btn-info">
+                    <input type="radio" name="options" value="tmp" autocomplete="off">临时
+                </label>
             </div>
-            <div class="ticket-priority row col-3">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-light active">
-                        <input type="radio" name="options" value="medium" autocomplete="off" checked>一般
-                    </label>
-                    <label class="btn btn-light">
-                        <input type="radio" name="options" value="high" autocomplete="off">紧急
-                    </label>
-                    <label class="btn btn-light">
-                        <input type="radio" name="options" value="immediately" autocomplete="off">立刻
-                    </label>
-                </div>
+        </div>
+        <div class="ticket-priority col-3">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-light active">
+                    <input type="radio" name="options" value="medium" autocomplete="off" checked>一般
+                </label>
+                <label class="btn btn-light">
+                    <input type="radio" name="options" value="high" autocomplete="off">紧急
+                </label>
+                <label class="btn btn-light">
+                    <input type="radio" name="options" value="immediately" autocomplete="off">立刻
+                </label>
             </div>
         </div>
     </div>
     <form method="post" action="/add">
         <textarea name="body" id="content_editor" rows="10"></textarea>
-        <input type="text" name="type" value="task">
-        <input type="text" name="priority" value="medium">
+        <input type="hidden" name="type" class="ticket-type-value" value="task">
+        <input type="hidden" name="priority" class="ticket-priority-value" value="medium">
+        <a href="#">Addtach Files</a>
+        <input type="date" name="date">
         <input type="submit" value="提交" class="btn btn-lg btn-success">
-        <script type="text/javascript">
-         $(function() {
-            new SimpleMDE({
-                element: document.getElementById("content_editor"),
-                placeholder: "添加内容....",
-            });
-
-            $(".ticket-type input").bind("click", function() {
-                $(this).addClass('active');
-            });
-        });
-        </script>
     </form>
     <div class="ticket_list">
-        <ul>
+        <ul class="list-group">
             <% if(data) { %>
             <% for(var r=0; r < data.length; ++r) { %>
-            <li class="<%= decodeURI(data[r].type) %>">
+            <li class="<%= decodeURI(data[r].type) %> list-group-item">
+                <%= decodeURI(data[r].type) %>
+                <%= decodeURI(data[r].priority) %>
+                <%= decodeURI(data[r].status) %>
+                <a href="/detail/<%= decodeURI(data[r].tid) %>">More</a>
                 <%- data[r].description%>
             </li>
-            <hr/>
             <% } %>
             <% } %>
         </ul>
