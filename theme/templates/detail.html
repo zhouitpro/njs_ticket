@@ -1,4 +1,23 @@
 <%- include('header.html') -%>
-<header class="container">
-    <h1>Ticket</h1>
-</header>
+<div class="detail container">
+    <%- data.description%>
+    <h3>Comment:</h3>
+    <form method="post" action="">
+        <textarea name="body" id="content_editor" rows="10"></textarea>
+        <a href="#">Addtach Files</a>
+        <input type="hidden" name="tid" value="<%= data.tid%>">
+        <input type="submit" value="提交" class="btn btn-lg btn-success">
+    </form>
+<% if(data.comments) %>
+    <ul class="list-group">
+        <% if(data) { %>
+            <% for(var r=0; r < data.comments.length; ++r) { %>
+            <li class="list-group-item">
+                <%- data.comments[r].description%>
+                <%- data.comments[r].time %>
+            </li>
+            <% } %>
+        <% } %>
+    </ul>
+</div>
+<%- include('footer.html') -%>

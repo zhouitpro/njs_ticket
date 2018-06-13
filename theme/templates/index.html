@@ -1,58 +1,80 @@
 <%- include('header.html') -%>
-<header class="container">
-    <h1>Ticket</h1>
-</header>
 <div class="container">
-    <div class="row ticket-headers">
-        <div class="ticket-type col-3">
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-info active">
-                    <input type="radio" name="options" value="task" autocomplete="off" checked>TASK
-                </label>
-                <label class="btn btn-info">
-                    <input type="radio" name="options" value="feature" autocomplete="off">计划
-                </label>
-                <label class="btn btn-info">
-                    <input type="radio" name="options" value="tmp" autocomplete="off">临时
-                </label>
+    <!-- Tab panes -->
+    <div class="row">
+        <div class="col-1">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-list-tab" data-toggle="pill" href="#v-list" role="tab" aria-controls="v-list" aria-selected="true">LIST</a>
+                <a class="nav-link" id="v-add-tab" data-toggle="pill" href="#v-add" role="tab" aria-controls="v-add" aria-selected="false">ADD</a>
             </div>
         </div>
-        <div class="ticket-priority col-3">
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-light active">
-                    <input type="radio" name="options" value="medium" autocomplete="off" checked>一般
-                </label>
-                <label class="btn btn-light">
-                    <input type="radio" name="options" value="high" autocomplete="off">紧急
-                </label>
-                <label class="btn btn-light">
-                    <input type="radio" name="options" value="immediately" autocomplete="off">立刻
-                </label>
+        <div class="col-11">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-list" role="tabpanel" aria-labelledby="v-list-tab">
+                    <div class="ticket_list">
+                        <ul class="list-group">
+                            <% if(data) { %>
+                            <% for(var r=0; r < data.length; ++r) { %>
+                            <li class="item-<%= decodeURI(data[r].type) %> item-<%= decodeURI(data[r].priority) %> list-group-item">
+                                <%- data[r].description%>
+                                <span class="badge badge-success"><%= decodeURI(data[r].type) %></span>
+                                <span class="badge badge-danger"><%= decodeURI(data[r].priority) %></span>
+                                <button class="badge badge-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= decodeURI(data[r].status) %></button>
+                                <div class="dropdown-menu changeStatusMenu" aria-labelledby="changeStatusMenu" ticket_id="<%= decodeURI(data[r].tid) %>" old="<%= decodeURI(data[r].status) %>">
+                                    <button class="dropdown-item">inprogress</button>
+                                    <button class="dropdown-item">close</button>
+                                    <button class="dropdown-item">open</button>
+                                </div>
+                                <a class="badge badge-secondary more-link" href="/detail/<%= decodeURI(data[r].tid) %>">more</a>
+                                <span class="badge badge-light"><%= decodeURI(data[r].time) %></span>
+                            </li>
+                            <% } %>
+                            <% } %>
+                        </ul>
+                        <%= data.pager%>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-add" role="tabpanel" aria-labelledby="v-add-tab">
+                    <div class="ticket-add-form">
+                        <div class="row ticket-headers">
+                            <div class="ticket-type col-3">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-info active">
+                                        <input type="radio" name="options" value="task" autocomplete="off" checked>TASK
+                                    </label>
+                                    <label class="btn btn-info">
+                                        <input type="radio" name="options" value="feature" autocomplete="off">计划
+                                    </label>
+                                    <label class="btn btn-info">
+                                        <input type="radio" name="options" value="tmp" autocomplete="off">临时
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="ticket-priority col-3">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-light active">
+                                        <input type="radio" name="options" value="medium" autocomplete="off" checked>一般
+                                    </label>
+                                    <label class="btn btn-light">
+                                        <input type="radio" name="options" value="high" autocomplete="off">紧急
+                                    </label>
+                                    <label class="btn btn-light">
+                                        <input type="radio" name="options" value="immediately" autocomplete="off">立刻
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <form method="post" action="/add">
+                            <textarea name="body" id="content_editor" rows="10"></textarea>
+                            <input type="hidden" name="type" class="ticket-type-value" value="task">
+                            <input type="hidden" name="priority" class="ticket-priority-value" value="medium">
+                            <a href="#">Addtach Files</a>
+                            <input type="submit" value="提交" class="btn btn-lg btn-success">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <form method="post" action="/add">
-        <textarea name="body" id="content_editor" rows="10"></textarea>
-        <input type="hidden" name="type" class="ticket-type-value" value="task">
-        <input type="hidden" name="priority" class="ticket-priority-value" value="medium">
-        <a href="#">Addtach Files</a>
-        <input type="date" name="date">
-        <input type="submit" value="提交" class="btn btn-lg btn-success">
-    </form>
-    <div class="ticket_list">
-        <ul class="list-group">
-            <% if(data) { %>
-            <% for(var r=0; r < data.length; ++r) { %>
-            <li class="<%= decodeURI(data[r].type) %> list-group-item">
-                <%= decodeURI(data[r].type) %>
-                <%= decodeURI(data[r].priority) %>
-                <%= decodeURI(data[r].status) %>
-                <a href="/detail/<%= decodeURI(data[r].tid) %>">More</a>
-                <%- data[r].description%>
-            </li>
-            <% } %>
-            <% } %>
-        </ul>
     </div>
 </div>
 <%- include('footer.html') -%>

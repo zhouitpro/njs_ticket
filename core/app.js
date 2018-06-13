@@ -22,7 +22,7 @@ exports.initRouter = function(req) {
     var self = this;
     self.routerConfig = require(global.__basedir + '/config/router.js');
 
-    var pathname = url.parse(req.url).pathname,
+    let pathname = url.parse(req.url).pathname,
         routers = self.routerConfig.routers();
 
     var res = self.res;

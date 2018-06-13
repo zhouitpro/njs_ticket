@@ -22,3 +22,12 @@ ul li{
 .ticket-headers{
     padding-bottom: 20px;
 }
+li.item-task.item-immediately.list-group-item {
+    background: #F8A;
+}
+li.item-task.item-high.list-group-item {
+    background: #F86;
+}
+li.item-tmp.item-medium.list-group-item {
+    background: #EDC;
+}
