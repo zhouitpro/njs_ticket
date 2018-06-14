@@ -17,6 +17,16 @@ $(function() {
         $(".ticket-priority-value").val($("input", this).val());
     });
 
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    })
+
     // uploads.
     Dropzone.autoDiscover = false;
     var dropzoneUploadEle = new Dropzone("form.dropzone-uploads", {
