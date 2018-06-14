@@ -7,16 +7,16 @@
         <input type="hidden" name="tid" value="<%= data.tid%>">
         <input type="submit" value="提交" class="btn btn-lg btn-success">
     </form>
-<% if(data.comments) %>
-    <ul class="list-group">
+    <% if(data.comments) %>
+    <ul class="list-group comments_body">
         <% if(data) { %>
             <% for(var r=0; r < data.comments.length; ++r) { %>
             <li class="list-group-item">
                 <div class="ticket-body"><%- data.comments[r].description%></div>
                 <%- data.comments[r].time %>
             </li>
-            <% } %>
         <% } %>
     </ul>
+    <% } %>
 </div>
 <%- include('footer.html') -%>

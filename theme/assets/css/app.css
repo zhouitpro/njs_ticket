@@ -34,3 +34,6 @@ li.item-tmp.item-medium.list-group-item {
 .ticket-body img{
     max-width: 100%;
 }
+ul.list-group.comments_body {
+    padding-top: 15px;
+}
