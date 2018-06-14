@@ -1,3 +1,4 @@
+var dateFormat = require('dateformat');
 var url = require('url');
 
 exports.list = function(app) {
@@ -13,11 +14,12 @@ exports.list = function(app) {
 
     var id = url.parse(app.req.url).pathname.split('/')[2];
     app.db.query("SELECT * FROM `tickets` WHERE tid=" + id, function (error, results, fields) {
-        var md = require('markdown-it')();
         var res = results[0];
-        res.description = md.render(res.description);
 
         app.db.query("SELECT * FROM `comments` WHERE tid=" + id + " ORDER BY time DESC", function (error, results, fields) {
+            for (var i=0;i<results.length; ++i) {
+                results[i].time = dateFormat(new Date(results[i].time), "yyyy-mm-dd h:MM:ss")
+            }
             res.comments = results;
             app.view(res);
         });

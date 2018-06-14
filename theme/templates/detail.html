@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="col-11">
-            <%- data.description%>
+            <div class="comment_content ticket-body"><%- data.description%></div>
             <form method="post" action="">
                 <textarea name="body" id="content_editor" rows="10"></textarea>
                 <a href="###" data-toggle="modal" data-target="#attach_fiels">Addtach Files</a>
@@ -21,7 +21,7 @@
                     <% for(var r=0; r < data.comments.length; ++r) { %>
                     <li class="list-group-item">
                         <div class="ticket-body"><%- data.comments[r].description%></div>
-                        <%- data.comments[r].time %>
+                        <span class="badge badge-danger"><%- data.comments[r].time %></span>
                     </li>
                 <% } %>
             </ul>
