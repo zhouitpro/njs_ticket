@@ -16,7 +16,7 @@
                             <% if(data) { %>
                             <% for(var r=0; r < data.length; ++r) { %>
                             <li class="item-<%= decodeURI(data[r].type) %> item-<%= decodeURI(data[r].priority) %> list-group-item">
-                                <%- data[r].description%>
+                                <div class="ticket-body"><%- data[r].description%></div>
                                 <span class="badge badge-success"><%= decodeURI(data[r].type) %></span>
                                 <span class="badge badge-danger"><%= decodeURI(data[r].priority) %></span>
                                 <button class="badge badge-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= decodeURI(data[r].status) %></button>
@@ -68,7 +68,7 @@
                             <textarea name="body" id="content_editor" rows="10"></textarea>
                             <input type="hidden" name="type" class="ticket-type-value" value="task">
                             <input type="hidden" name="priority" class="ticket-priority-value" value="medium">
-                            <a href="#">Addtach Files</a>
+                            <a href="###" data-toggle="modal" data-target="#attach_fiels">Addtach Files</a>
                             <input type="submit" value="提交" class="btn btn-lg btn-success">
                         </form>
                     </div>

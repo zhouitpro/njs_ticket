@@ -1,4 +1,5 @@
 var qs = require('querystring');
+var url = require('url');
 
 exports.initGET = function(req, pre, cb) {
     pre._GET = {};
@@ -16,17 +17,22 @@ exports.initGET = function(req, pre, cb) {
 exports.initPOST = function(req, pre, cb) {
     pre._POST = {};
     var body = '';
-    req.on('data', function(dataBuffer) {
-        body += dataBuffer;
-        if(body.length > 1e6) {
-            req.writeHead(413, {'Content-Type': 'text/plain'}).end();
-            req.connection.destroy();
-        }
-    });
-    req.on('end', function () {
-        pre._POST = qs.parse(body);
+
+    // @TODO upload file confirm.
+    if (url.parse(req.url).pathname != '/upload_file') {
+        req.on('data', function(dataBuffer) {
+            body += dataBuffer;
+            if(body.length > 1e6) {
+                req.connection.destroy();
+            }
+        });
+        req.on('end', function () {
+            pre._POST = qs.parse(body);
+            return cb();
+        });
+    } else {
         cb();
-    });
+    }
 };
 
 exports.initCOOKIE = function(req, pre, cb) {

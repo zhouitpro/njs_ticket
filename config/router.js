@@ -3,6 +3,7 @@ exports.routers = function() {
       '/': 'index.front',
       '/add': 'add.addto',
       '/change_status': 'add.changestatus',
+      '/upload_file': 'add.uploadfile',
       '/detail/%': 'detail.list'
   }
 };

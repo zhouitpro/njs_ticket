@@ -22,3 +22,45 @@ exports.changestatus = function(app) {
         });
     }
 };
+
+/**
+ * Upload files.
+ *
+ * @bind /upload_file
+ * @param app
+ */
+exports.uploadfile = function(app) {
+    var formidable = require('formidable');
+    var fs = require('fs');
+    var res = app.res;
+    var req = app.req;
+
+    var form = new formidable.IncomingForm();
+    // specify that we want to allow the user to upload multiple files in a single request
+    form.multiples = true;
+
+    // store all uploads in the /uploads directory
+    form.uploadDir = global.__basedir + '/theme/assets/uploads';
+
+    var fullname = '';
+
+    form.on('file', function(field, file) {
+        var fname = file.name.split('.');
+        var newname = Math.floor(Date.now() / 1000) + '.' + fname[fname.length-1];
+        fullname = 'http://' + req.headers.host + '/assets/uploads/' + newname;
+        fs.rename(file.path, form.uploadDir + '/' + newname);
+    });
+
+    // log any errors that occur
+    form.on('error', function(err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+    // once all the files have been uploaded, send a response to the client
+    form.on('end', function() {
+        res.end(fullname);
+    });
+
+    // parse the incoming request containing the form data
+    form.parse(req);
+};
