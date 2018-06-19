@@ -4,12 +4,11 @@ var url = require('url');
 exports.list = function(app) {
     if (app.pre._POST.tid) {
         let post = app.pre._POST;
-        let q = "INSERT INTO `comments` (`cid`, `tid`, `description`, `time`) VALUES (NULL, '"+post.tid+"', '"+post.body+"', NOW())";
-        app.db.query(q, function(error, results, fields) {
-            if (error) {
-               console.log(error);
-            }
-        });
+
+        let query = app.db.conn().query('INSERT INTO comments (`cid`, `time`, `tid`, `description`) VALUES (NULL, NOW(), ?, ?)', [
+            post.tid,
+            post.body
+        ]);
     }
 
     var id = url.parse(app.req.url).pathname.split('/')[2];
