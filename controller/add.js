@@ -1,8 +1,7 @@
 exports.addto = function(app) {
     var post = app.pre._POST;
     var q = "INSERT INTO `tickets` (`tid`, `type`, `status`, `priority`, `description`, `time`) VALUES (NULL, '"+post.type+"', 'open', '"+post.priority+"', '" + post.body + "', NOW())";
-    app.db.query(q, function (error, results, fields) {
-        // app.res.end('Success');
+    app.db.query(q, (error, results, fields) => {
         app.res.writeHead(302, {
             'Location': '/'
         });
@@ -16,10 +15,7 @@ exports.changestatus = function(app) {
         let tid = post.tid;
         let status = post.status;
         var q = "UPDATE `tickets` SET `status` = '"+status+"' WHERE `tickets`.`tid` = '"+tid+"';";
-        app.db.query(q, function (error, results, fields) {
-            // app.res.end('Success');
-            app.res.end('success');
-        });
+        app.db.query(q, (error, results, fields) => app.res.end('success'));
     }
 };
 
@@ -44,7 +40,7 @@ exports.uploadfile = function(app) {
 
     var fullname = '';
 
-    form.on('file', function(field, file) {
+    form.on('file', (field, file) => {
         var fname = file.name.split('.');
         var newname = Math.floor(Date.now() / 1000) + '.' + fname[fname.length-1];
         fullname = 'http://' + req.headers.host + '/assets/uploads/' + newname;
@@ -52,12 +48,12 @@ exports.uploadfile = function(app) {
     });
 
     // log any errors that occur
-    form.on('error', function(err) {
+    form.on('error', (err) => {
         console.log('An error has occured: \n' + err);
     });
 
     // once all the files have been uploaded, send a response to the client
-    form.on('end', function() {
+    form.on('end', () => {
         res.end(fullname);
     });
 

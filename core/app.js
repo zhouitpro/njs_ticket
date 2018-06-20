@@ -9,6 +9,10 @@ exports.db = require(global.__basedir + '/core/includes/database');
 exports.initreq = require(global.__basedir + '/core/includes/initreq');
 exports.config = require(global.__basedir + '/config/config.js');
 
+function to404page() {
+
+}
+
 /**
  * get controller.
  *
@@ -20,32 +24,33 @@ exports.config = require(global.__basedir + '/config/config.js');
  */
 exports.initRouter = function(req) {
     var self = this;
+
     self.routerConfig = require(global.__basedir + '/config/router.js');
 
     let pathname = url.parse(req.url).pathname,
+        res = self.res,
         routers = self.routerConfig.routers();
-
-    var res = self.res;
 
     // this is assets.
     if (pathname.split('/')[1] == 'assets' && pathname.split('/')[2]) {
-        fs.readFile(self.theme_path + pathname, function (err, data) {
+        let assets_path = self.theme_path + pathname;
+        if (fs.existsSync(assets_path)) {
+            fs.readFile(assets_path, (err, data) => {
 
-            // if err to 404 page.
-            if (err) {
-                res.writeHead(404, 'page not found.');
-                res.end('404 Page Not Found.');
-            }
+                if (err) {
+                   throws(err);
+                }
 
-            // get mime type.
-            var type = mime.lookup(self.theme_path + pathname);
-
-            res.writeHead(200, {'Content-Type': type});
-            if (data) {
+                // get mime type.
+                let type = mime.lookup(assets_path);
+                res.writeHead(200, {'Content-Type': type});
                 res.write(data);
-            }
-            res.end();
-        });
+                res.end();
+            });
+        } else {
+            res.writeHead(404, 'page not found.');
+            res.end('404 Page Not Found.');
+        }
         return;
     }
 
@@ -125,8 +130,21 @@ exports.createServer = function() {
         self.req = req;
         self.res = res;
         self.pre = {};
+
+        process.on('uncaughtException', err => {
+            console.log('has error: ' + err.message);
+            process.exit(1);
+        });
+
         self.initreq.initREQUEST(req, self.pre, function() {
-            self.initRouter(req);
+            try {
+                self.initRouter(req);
+            } catch (err) {
+                console.log(err);
+                res.writeHead(500, 'text/html');
+                res.write('Server Error, Pleasce check log file.');
+                res.end();
+            }
         });
     });
 };
