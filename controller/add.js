@@ -1,7 +1,13 @@
 exports.addto = function(app) {
     var post = app.pre._POST;
-    var q = "INSERT INTO `tickets` (`tid`, `type`, `status`, `priority`, `description`, `time`) VALUES (NULL, '"+post.type+"', 'open', '"+post.priority+"', '" + post.body + "', NOW())";
-    app.db.query(q, (error, results, fields) => {
+
+    app.db.conn().query('INSERT INTO `tickets` (`tid`, `time`, `type`, `status`, `priority`, `description`) VALUES (NULL, NOW(), ?, ?, ?, ?)', [
+        post.type,
+        'open',
+        post.priority,
+        post.body
+    ], (error, results, fields) => {
+        console.log(error);
         app.res.writeHead(302, {
             'Location': '/'
         });
