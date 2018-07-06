@@ -1,9 +1,9 @@
-exports.helper = function(app) {
+function Helper(app) {
+    this.App = app;
+}
 
-    var helpers = {};
-
-    helpers.assets = function(path) {
-        return 'http://' + app.req.headers.host + '/assets/' + path;
-    };
-    return helpers;
+Helper.prototype.assets = function(path) {
+    return 'http://' + this.App.req.headers.host + '/assets/' + path;
 };
+
+module.exports = Helper;

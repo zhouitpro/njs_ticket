@@ -88,7 +88,7 @@ $(function() {
             url: '/change_status',
             data: {'tid': tid, 'status': text},
             success: function() {
-
+                location.reload();
             }
         });
     });

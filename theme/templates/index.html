@@ -15,7 +15,7 @@
                         <ul class="list-group">
                             <% if(data) { %>
                             <% for(var r=0; r < data.length; ++r) { %>
-                            <li class="item-<%= decodeURI(data[r].type) %> item-<%= decodeURI(data[r].priority) %> list-group-item">
+                            <li class="item-<%= decodeURI(data[r].type) %> item-<%= decodeURI(data[r].priority) %> item-<%= decodeURI(data[r].status) %> list-group-item">
                                 <div class="ticket-body"><%- data[r].description%></div>
                                 <span class="badge badge-success"><%= decodeURI(data[r].type) %></span>
                                 <span class="badge badge-danger"><%= decodeURI(data[r].priority) %></span>

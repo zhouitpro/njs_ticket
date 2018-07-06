@@ -2,15 +2,17 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var mime = require('mime-types');
-var helper = require(global.__basedir + '/core/includes/helpers');
 
-exports.ejs = require('ejs');
-exports.db = require(global.__basedir + '/core/includes/database');
-exports.initreq = require(global.__basedir + '/core/includes/initreq');
-exports.config = require(global.__basedir + '/config/config.js');
+function App() {
+    let Helper = require(global.__basedir + '/core/includes/helpers');
 
-function to404page() {
-
+    this.routerConfig = require(global.__basedir + '/config/router.js');
+    this.theme_path = global.__basedir + '/theme';
+    this.ejs = require('ejs');
+    this.db = require(global.__basedir + '/core/includes/database');
+    this.initreq = require(global.__basedir + '/core/includes/initreq');
+    this.config = require(global.__basedir + '/config/config.js');
+    this.Helper = new Helper(this);
 }
 
 /**
@@ -22,10 +24,8 @@ function to404page() {
  *
  * @returns {*|boolean}
  */
-exports.initRouter = function(req) {
+App.prototype.initRouter = function(req) {
     var self = this;
-
-    self.routerConfig = require(global.__basedir + '/config/router.js');
 
     let pathname = url.parse(req.url).pathname,
         res = self.res,
@@ -54,6 +54,7 @@ exports.initRouter = function(req) {
         return;
     }
 
+    // 生成可以匹配的路由Map.
     let match_routers = [
         pathname,
         pathname + '/',
@@ -89,7 +90,7 @@ exports.initRouter = function(req) {
  *
  * @param data
  */
-exports.view = function(data) {
+App.prototype.view = function(data) {
     var data = data || {},
         self = this;
 
@@ -99,16 +100,16 @@ exports.view = function(data) {
     }
 
     // init data.
-    var results = {
+    let results = {
         basedir: global.__basedir,
         baseurl: 'http://' + self.req.headers.host,
         fullpath: data.baseurl + url.parse(self.req.url).pathname,
-        helper: helper.helper(self),
+        helper: this.Helper,
         data: data
     };
 
     // render templates.
-    self.ejs.renderFile(self.template, results, {debug: false}, function (err, str) {
+    self.ejs.renderFile(self.template, results, {debug: false}, (err, str) => {
         if (err) {
             self.res.end(err.toString());
         } else {
@@ -122,17 +123,18 @@ exports.view = function(data) {
  *
  * @returns {server.Server}
  */
-exports.createServer = function() {
-    var self = this;
+App.prototype.createServer = function() {
 
-    self.theme_path = global.__basedir + '/theme';
+    var self = this;
     return http.createServer(function (req, res) {
         self.req = req;
         self.res = res;
         self.pre = {};
 
+        // 错误处理.
         process.on('uncaughtException', err => {
             console.log('has error: ' + err.message);
+            console.log(err);
             process.exit(1);
         });
 
@@ -148,3 +150,5 @@ exports.createServer = function() {
         });
     });
 };
+
+module.exports = new App();

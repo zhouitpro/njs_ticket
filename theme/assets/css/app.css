@@ -22,14 +22,18 @@ ul li{
 .ticket-headers{
     padding-bottom: 20px;
 }
-li.item-task.item-immediately.list-group-item {
+li.item-task.item-immediately.list-group-item.item-open {
     background: #F8A;
 }
-li.item-task.item-high.list-group-item {
+li.item-task.item-high.list-group-item.item-open {
     background: #F86;
 }
-li.item-tmp.item-medium.list-group-item {
+li.item-tmp.item-medium.list-group-item.item-open {
     background: #EDC;
+}
+li.item-close{
+    background: #e2e3e5;
+    color:#686868;
 }
 .ticket-body img, .comment_content img{
     max-width: 100%;
