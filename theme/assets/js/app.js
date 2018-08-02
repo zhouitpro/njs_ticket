@@ -5,8 +5,9 @@ $(function() {
     });
 
     $(".ticket-body").each(function() {
-        var body = $(this).html();
-        $(this).html(simplemde.markdown(body));
+        var body = $(this).text();
+        var body = simplemde.markdown(body);
+        $(this).html(body);
     });
 
     $(".ticket-type label").bind("click", function(env) {
@@ -91,5 +92,14 @@ $(function() {
                 location.reload();
             }
         });
+    });
+
+    lightbox.option({
+        fadeDuration: 0,
+        'resizeDuration': 200,
+        // 'wrapAround': true
+    })
+    $(".ticket_list img, .ticket-body img").each(function(index, img) {
+        $(img).wrap('<a href="'+$(img).attr("src")+'" data-lightbox="ticketlist"></a>');
     });
 });

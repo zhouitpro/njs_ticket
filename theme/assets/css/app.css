@@ -37,6 +37,7 @@ li.item-close{
 }
 .ticket-body img, .comment_content img{
     max-width: 100%;
+    max-height: 150px;
 }
 ul.list-group.comments_body {
     padding-top: 15px;
